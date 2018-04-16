@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cafeJo.heeJ.notice.NoticeDAO"> <!--이 sql 문장과 매핑될 인터페이스의 완전한 경로-->
+	<select id="getNoticeTotalNum" resultType="int">
+		select count(nnum) from notice
+	</select>
+	<select id="getSearchNoticeTotalNum" resultType="int">
+		select count(nnum) from notice
+		<where>
+			<if test="type=='ntitle'">
+				ntitle like '%'||#{keyword}||'%'
+			</if>
+			<if test="type=='ncontent'">
+				ncontent like '%'||#{keyword}||'%'
+			</if>
+		</where>
+	</select>
+	<select id="getNoticeList" resultType="notice">
+ 	select * from
+ 	 (select A.*,ROWNUM r from 
+ 	 	(select * from notice order by noticedate desc) A
+ 	 	)
+ 	 	where r >= #{startArticleNum} and r &lt;= #{endArticleNum}
+	</select>
+	<select id="getSearchNotice" resultType="notice">
+ 	select * from
+ 	 (select A.*,ROWNUM r from 
+ 	 	(select * from notice
+		<where>
+			<if test="type=='ntitle'">
+				ntitle like '%'||#{keyword}||'%'
+			</if>
+			<if test="type=='ncontent'">
+				ncontent like '%'||#{keyword}||'%'
+			</if>
+		</where>
+		 order by noticedate desc) A
+ 	 	)
+ 	 	where r >= #{startArticleNum} and r &lt;= #{endArticleNum}
+	</select>
+	<select id="getNoticeview" resultType="notice">
+		select * from notice where nnum = #{nnum}
+	</select>
+	<update id="noticehitup" parameterType="int">
+		update notice set nhit=nhit+1 where nnum = #{nnum}
+	</update>
+	<insert id="addnotice" parameterType="notice">
+		insert into notice
+		values(notice_seq.nextval,#{ntitle },#{ncontent },#{nhit },sysdate)
+	</insert>
+	<select id="maxnnum" resultType="int">
+		select max(nnum) from notice
+	</select>
+	<update id="updatenotice" parameterType="notice">
+		update notice set ntitle=#{ntitle }, ncontent=#{ncontent } where nnum = #{nnum}
+	</update>
+	<delete id="deletenotice" parameterType="int">
+		delete from notice where nnum= #{nnum}
+	</delete>
+</mapper>

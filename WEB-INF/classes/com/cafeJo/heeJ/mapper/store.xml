@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cafeJo.heeJ.store.StoreDAO"> <!--이 sql 문장과 매핑될 인터페이스의 완전한 경로-->
+ 	<select id="getStoreTotalNum" resultType="int">
+		select count(storenum ) from store
+	</select>
+	<select id="getSearchStoreTotalNum" resultType="int">
+		select count(storenum ) from store
+		<where>
+			<if test="type=='adress'">
+				oldadress like '%'||#{keyword}||'%' or newadress like '%'||#{keyword}||'%'
+			</if>
+			<if test="type=='adress2' and doadress!=''">
+				(oldadress like '%'||#{doadress}||'%' or newadress like '%'||#{doadress}||'%')
+			</if>
+			<if test="type=='adress2' and gooadress!=''">
+				and (oldadress like '%'||#{gooadress}||'%' or newadress like '%'||#{gooadress}||'%')
+			</if>
+			<if test="type=='adress2' and keyword!=''">
+				and (storename like '%'||#{keyword}||'%')
+			</if>
+		</where>
+	</select>
+	<select id="getStoreList" resultType="store">
+ 	select * from
+ 	 (select A.*,ROWNUM r from 
+ 	 	(select * from store order by storedate desc) A
+ 	 	)
+ 	 	where r >= #{startArticleNum} and r &lt;= #{endArticleNum}
+	</select>
+	<select id="getSearchStore" resultType="store">
+ 	select * from
+ 	 (select A.*,ROWNUM r from 
+ 	 	(select * from store
+		<where>
+			<if test="type=='adress'">
+				oldadress like '%'||#{keyword}||'%' or newadress like '%'||#{keyword}||'%'
+			</if>
+			<if test="type=='adress2' and doadress!=''">
+				(oldadress like '%'||#{doadress}||'%' or newadress like '%'||#{doadress}||'%')
+			</if>
+			<if test="type=='adress2' and gooadress!=''">
+				and (oldadress like '%'||#{gooadress}||'%' or newadress like '%'||#{gooadress}||'%')
+			</if>
+			<if test="type=='adress2' and keyword!=''">
+				and (storename like '%'||#{keyword}||'%')
+			</if>
+		</where>
+		 order by storedate desc) A
+ 	 	)
+ 	 	where r >= #{startArticleNum} and r &lt;= #{endArticleNum}
+	</select>
+
+	<select id="getStoreview" resultType="store">
+		select * from store where storenum  = #{storenum }
+	</select>
+	<insert id="addstore" parameterType="store">
+		insert into store
+		values(store_seq.nextval,#{storename },#{storecall },#{oldadress },#{newadress },#{storetime },#{carok },#{storemore },sysdate)
+	</insert>
+	<select id="maxstorenum" resultType="int">
+		select max(storenum) from store
+	</select>
+	<update id="updatestore" parameterType="store">
+		update store set storename=#{storename },storecall=#{storecall },oldadress=#{oldadress },newadress=#{newadress },storetime=#{storetime },carok=#{carok },storemore=#{storemore }
+	 where storenum  = #{storenum }
+	</update>
+	<delete id="deletestore" parameterType="int">
+		delete from store where storenum = #{storenum }
+	</delete> 
+</mapper>

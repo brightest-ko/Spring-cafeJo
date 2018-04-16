@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cafeJo.heeJ.menu.MenuDAO"> <!--이 sql 문장과 매핑될 인터페이스의 완전한 경로-->
+
+	<insert id="addmenu" parameterType="menu">
+		insert into menu
+		values(menu_seq.nextval,#{kind},#{menuname},#{hotncold},#{description},#{calory},#{saccharide},
+		#{protein},#{caffeine},#{fat},#{sodium},sysdate,#{filename})
+	</insert>
+	<select id="getMenuview" resultType="menu">
+		select * from menu where num = #{num}
+	</select>
+	<update id="updatemenu" parameterType="menu">
+		update menu set kind = #{kind} ,menuname=#{menuname}, hotncold=#{hotncold}
+		, description=#{description}, calory=#{calory}
+		, saccharide=#{saccharide} , protein=#{protein} , caffeine=#{caffeine}
+		, fat=#{fat}, sodium=#{sodium} , filename = #{filename}
+		where num = #{num}
+	</update>
+
+	<!-- Coffee -->
+	<select id="getCoffeeTotalNum" resultType="int">
+		select count(num) from menu where kind='coffee'
+	</select>
+	<select id="getSearchCoffeeTotalNum" resultType="int">
+		select count(num) from menu where kind='coffee' and menuname like '%'||#{keyword}||'%'
+	</select>
+	<select id="getCoffeeList" resultType="menu">
+ 	select * from
+ 	 (select A.*,ROWNUM r from 
+ 	 	(select * from menu where kind='coffee' order by menudate desc) A
+ 	 	)
+ 	 	where r >= #{startArticleNum} and r &lt;= #{endArticleNum}
+	</select>
+	<select id="getSearchCoffee" resultType="menu">
+ 	select * from
+ 	 (select A.*,ROWNUM r from 
+ 	 	(select * from menu where kind='coffee' and menuname like '%'||#{keyword}||'%' order by menudate desc) A
+ 	 	)
+ 	 	where r >= #{startArticleNum} and r &lt;= #{endArticleNum}
+	</select>
+	
+	<!-- Beverage -->
+	<select id="getBeverageTotalNum" resultType="int">
+		select count(num) from menu where kind='beverage'
+	</select>
+	<select id="getSearchBeverageTotalNum" resultType="int">
+		select count(num) from menu where kind='beverage' and menuname like '%'||#{keyword}||'%'
+	</select>
+	<select id="getBeverageList" resultType="menu">
+ 	select * from
+ 	 (select A.*,ROWNUM r from 
+ 	 	(select * from menu where kind='beverage' order by menudate desc) A
+ 	 	)
+ 	 	where r >= #{startArticleNum} and r &lt;= #{endArticleNum}
+	</select>
+	<select id="getSearchBeverage" resultType="menu">
+ 	select * from
+ 	 (select A.*,ROWNUM r from 
+ 	 	(select * from menu where kind='beverage' and menuname like '%'||#{keyword}||'%' order by menudate desc) A
+ 	 	)
+ 	 	where r >= #{startArticleNum} and r &lt;= #{endArticleNum}
+	</select>
+	
+	<!-- Dessert -->
+	<select id="getDessertTotalNum" resultType="int">
+		select count(num) from menu where kind='dessert'
+	</select>
+	<select id="getSearchDessertTotalNum" resultType="int">
+		select count(num) from menu where kind='dessert' and menuname like '%'||#{keyword}||'%'
+	</select>
+	<select id="getDessertList" resultType="menu">
+ 	select * from
+ 	 (select A.*,ROWNUM r from 
+ 	 	(select * from menu where kind='dessert' order by menudate desc) A
+ 	 	)
+ 	 	where r >= #{startArticleNum} and r &lt;= #{endArticleNum}
+	</select>
+	<select id="getSearchDessert" resultType="menu">
+ 	select * from
+ 	 (select A.*,ROWNUM r from 
+ 	 	(select * from menu where kind='dessert' and menuname like '%'||#{keyword}||'%' order by menudate desc) A
+ 	 	)
+ 	 	where r >= #{startArticleNum} and r &lt;= #{endArticleNum}
+	</select>
+	<delete id="deletemenu" parameterType="int">
+		delete from menu where num= #{num}
+	</delete>
+	
+</mapper>

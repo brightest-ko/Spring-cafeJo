@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cafeJo.heeJ.customer.CustomerDAO"> <!--이 sql 문장과 매핑될 인터페이스의 완전한 경로-->
+	
+    <select id="getEventTotalNum" resultType="int">
+		select count(eventnum) from event
+	</select>
+	<select id="getSearchEventTotalNum" resultType="int">
+		select count(eventnum) from event
+		<where>
+			<if test="type=='etitle'">
+				etitle like '%'||#{keyword}||'%'
+			</if>
+			<if test="type=='econtent'">
+				econtent like '%'||#{keyword}||'%'
+			</if>
+		</where>
+	</select>
+	<select id="getEventList" resultType="event">
+ 	select * from
+ 	 (select A.*,ROWNUM r from 
+ 	 	(select * from event order by eventdate desc) A
+ 	 	)
+ 	 	where r >= #{startArticleNum} and r &lt;= #{endArticleNum}
+	</select>
+	<select id="getSearchEvent" resultType="event">
+ 	select * from
+ 	 (select A.*,ROWNUM r from 
+ 	 	(select * from event
+		<where>
+			<if test="type=='etitle'">
+				etitle like '%'||#{keyword}||'%'
+			</if>
+			<if test="type=='econtent'">
+				econtent like '%'||#{keyword}||'%'
+			</if>
+		</where>
+		 order by eventdate desc) A
+ 	 	)
+ 	 	where r >= #{startArticleNum} and r &lt;= #{endArticleNum}
+	</select>
+	
+	
+	<select id="getEventmemberTotalNum" resultType="int">
+		select count(emnum) from eventmember
+	</select>
+	<select id="getSearchEventmemberTotalNum" resultType="int">
+		select count(emnum) from eventmember
+		<where>
+			<if test="type=='etitle'">
+				etitle like '%'||#{keyword}||'%'
+			</if>
+			<if test="type=='econtent'">
+				econtent like '%'||#{keyword}||'%'
+			</if>
+		</where>
+	</select>
+	<select id="getEventmemberList" resultType="eventmember">
+ 	select * from
+ 	 (select A.*,ROWNUM r from 
+ 	 	(select * from eventmember order by eventmemberdate desc) A
+ 	 	)
+ 	 	where r >= #{startArticleNum} and r &lt;= #{endArticleNum}
+	</select>
+	<select id="getSearchEventmember" resultType="eventmember">
+ 	select * from
+ 	 (select A.*,ROWNUM r from 
+ 	 	(select * from eventmember
+		<where>
+			<if test="type=='etitle'">
+				etitle like '%'||#{keyword}||'%'
+			</if>
+			<if test="type=='econtent'">
+				econtent like '%'||#{keyword}||'%'
+			</if>
+		</where>
+		 order by eventmemberdate desc) A
+ 	 	)
+ 	 	where r >= #{startArticleNum} and r &lt;= #{endArticleNum}
+	</select>
+	
+	
+	
+	
+	<insert id="addevent" parameterType="event">
+		insert into event
+		values(event_seq.nextval,#{etitle },#{econtent },#{filename},0,sysdate,#{eventcount },0,'startevent')
+	</insert>
+	<select id="maxeventnum" resultType="int">
+		select max(eventnum) from event
+	</select>
+	<select id="getEventview" resultType="event">
+		select * from event where eventnum = #{eventnum}
+	</select>
+	<update id="eventhitup" parameterType="int">
+		update event set ehit=ehit+1 where eventnum = #{eventnum}
+	</update>
+	<update id="updateevent" parameterType="event">
+		update event set etitle=#{etitle }, econtent=#{econtent }, filename=#{filename }, eventcount=#{eventcount } where eventnum = #{eventnum}
+	</update>
+	<delete id="deleteeventmember" parameterType="int">
+		delete from eventmember where eventnum= #{eventnum}
+	</delete>
+	<delete id="deleteevent" parameterType="int">
+		delete from event where eventnum= #{eventnum}
+	</delete>
+	<select id="getUserinfo" resultType="member">
+		select * from member where userid = #{userid}
+	</select>
+	<insert id="eventdo" parameterType="eventmember">
+		insert into eventmember
+		values(eventmember_seq.nextval,#{userid},#{username},#{hp},#{mail},#{eventnum },sysdate)
+	</insert>
+	<update id="eventnowcountup" parameterType="int">
+		update event set eventnowcount =eventnowcount +1 where eventnum = #{eventnum}
+	</update>
+	<select id="eventcheck" resultType="int">
+		select count(emnum) from eventmember where userid = #{userid} and eventnum= #{eventnum}
+	</select>
+	<select id="getEventnowcount" resultType="int">
+		select count(emnum) from eventmember where eventnum= #{eventnum}
+	</select>
+	<!-- select eventnowcount from event where eventnum= #{eventnum} -->
+	<select id="getEventcount" resultType="int">
+		select eventcount from event where eventnum= #{eventnum}
+	</select>
+	<update id="updateEventfinish" parameterType="int">
+		update event set eventfinish ='finishevent' where eventnum = #{eventnum}
+	</update>
+	<select id="getEventfinish" resultType="String">
+		select eventfinish from event where eventnum= #{eventnum}
+	</select>
+	
+	<select id="getMyeventTotalNum" resultType="int">
+		select count(emnum ) from eventmember where userid =#{userid }
+	</select>
+	<select id="getSearchMyeventTotalNum" resultType="int">
+		select count(emnum ) from eventmember
+		<where>
+			<if test="type=='etitle'">
+				etitle like '%'||#{keyword}||'%' and userid =#{userid }
+			</if>
+			<if test="type=='econtent'">
+				econtent like '%'||#{keyword}||'%' and userid =#{userid }
+			</if>
+		</where>
+	</select>
+	<select id="getMyeventList" resultType="eventmember">
+ 	select * from
+ 	 (select A.*,ROWNUM r from 
+ 	 	(select * from eventmember  where userid =#{userid} order by eventmemberdate desc) A
+ 	 	)
+ 	 	where r >= #{startArticleNum} and r &lt;= #{endArticleNum}
+	</select>
+	<select id="getSearchMyevent" resultType="event">
+ 	select * from
+ 	 (select A.*,ROWNUM r from 
+ 	 	(select * from eventmember
+		<where>
+			<if test="type=='etitle'">
+				qtitle like '%'||#{keyword}||'%' and userid =#{userid }
+			</if>
+			<if test="type=='econtent'">
+				qcontent like '%'||#{keyword}||'%' and userid =#{userid }
+			</if>
+		</where>
+		 order by qref desc, eventmemberdate) A
+ 	 	)
+ 	 	where r >= #{startArticleNum} and r &lt;= #{endArticleNum}
+	</select>
+	
+	
+	<select id="getEtitle" resultType="String">
+		select etitle from event where eventnum= #{eventnum}
+	</select>
+</mapper>

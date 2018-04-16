@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cafeJo.heeJ.member.MemberDao">
+	<select id="findUser" resultType="member" parameterType="String">
+		select * from member where userid=#{userid}
+	</select>
+	<select id="login" resultType="String" parameterType="String">
+		select passwd from member where userid=#{userid} and cancelmember='signup'
+	</select>
+	<insert id="signup" parameterType="member">
+		insert into member
+		values(#{userid},#{passwd},#{username},#{gender},#{birth},#{hp},#{hpget},sysdate,#{mail},#{mailget},#{grade},'signup')
+	</insert>
+	
+	<select id="getMemberTotalNum" resultType="int">
+		select count(userid) from member
+	</select>
+	<select id="getSearchMemberTotalNum" resultType="int">
+		select count(userid) from member
+		<where>
+			<if test="type=='userid'">
+				userid like '%'||#{keyword}||'%'
+			</if>
+			<if test="type=='username'">
+				username like '%'||#{keyword}||'%'
+			</if>
+			<if test="type=='hp'">
+				hp like '%'||#{keyword}||'%'
+			</if>
+			<if test="type=='grade'">
+				grade like '%'||#{keyword}||'%'
+			</if>
+			<if test="type=='cancelmember'">
+				cancelmember like '%'||#{keyword}||'%'
+			</if>
+			<if test="type=='hpget'">
+				hpget like '%'||#{keyword}||'%'
+			</if>
+			<if test="type=='mailget'">
+				mailget like '%'||#{keyword}||'%'
+			</if>
+		</where>
+	</select>
+	<select id="getMemberList" resultType="member">
+ 	select * from
+ 	 (select A.*,ROWNUM r from 
+ 	 	(select * from member order by joindate desc) A
+ 	 	)
+ 	 	where r >= #{startArticleNum} and r &lt;= #{endArticleNum}
+	</select>
+	<select id="getSearchMember" resultType="member">
+ 	select * from
+ 	 (select A.*,ROWNUM r from 
+ 	 	(select * from member
+		<where>
+			<if test="type=='userid'">
+				userid like '%'||#{keyword}||'%'
+			</if>
+			<if test="type=='username'">
+				username like '%'||#{keyword}||'%'
+			</if>
+			<if test="type=='hp'">
+				hp like '%'||#{keyword}||'%'
+			</if>
+			<if test="type=='grade'">
+				grade like '%'||#{keyword}||'%'
+			</if>
+			<if test="type=='cancelmember'">
+				cancelmember like '%'||#{keyword}||'%'
+			</if>
+			<if test="type=='hpget'">
+				hpget like '%'||#{keyword}||'%'
+			</if>
+			<if test="type=='mailget'">
+				mailget like '%'||#{keyword}||'%'
+			</if>
+		</where>
+		 order by joindate desc) A
+ 	 	)
+ 	 	where r >= #{startArticleNum} and r &lt;= #{endArticleNum}
+	</select>
+	<select id="getMemberview" resultType="member">
+		select * from member where userid = #{userid}
+	</select>
+	<select id="idcheck" resultType="int">
+		select count(userid) from member where userid = #{userid}
+	</select>
+	<update id="updatemyinfo" parameterType="member">
+		update member set passwd=#{passwd}, hp=#{hp},hpget=#{hpget}, mail=#{mail},mailget=#{mailget} where userid = #{userid}
+	</update>
+	<update id="updatemyinfo2" parameterType="member">
+		update member set passwd=#{passwd}, hp=#{hp},hpget=#{hpget} where userid = #{userid}
+	</update>
+	<update id="deletemyinfo" parameterType="member">
+		update member set cancelmember ='cancle' where userid = #{userid}
+	</update>
+	<update id="addmemberagain" parameterType="member">
+		update member set cancelmember ='signup' where userid = #{userid}
+	</update>
+	
+	<select id="findid" parameterType="member" resultType="String">
+		select userid from member where username = #{username} and birth = #{birth} and hp=#{hp}
+	</select>
+	<select id="findpw" parameterType="member" resultType="String">
+		select userid from member where userid=#{userid} and username = #{username} and birth = #{birth} and hp=#{hp}
+	</select>
+	<update id="setnewpw" parameterType="member">
+		update member set passwd=#{passwd} where userid = #{userid}
+	</update>
+	<select id="getnewpw" resultType="String">
+		select passwd from member where userid=#{userid}
+	</select>
+	
+	<delete id="deleteuserqna" parameterType="String">
+		delete from qna where qrefid=#{userid}
+	</delete>
+	<delete id="deleteinfo" parameterType="String">
+		delete from member where userid=#{userid}
+	</delete>
+	
+	<select id="qnacount" resultType="int">
+		select count(qnum) from qna where userid=#{userid}
+	</select>
+	
+	
+</mapper>

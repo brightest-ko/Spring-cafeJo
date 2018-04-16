@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+	<typeAliases>
+		<typeAlias alias="menu" type="com.cafeJo.heeJ.menu.MenuVo" />
+		<typeAlias alias="member" type="com.cafeJo.heeJ.member.MemberVo" />
+		<typeAlias alias="event" type="com.cafeJo.heeJ.event.EventVo" />
+		<typeAlias alias="eventmember" type="com.cafeJo.heeJ.event.EventmemberVo" />
+		<typeAlias alias="notice" type="com.cafeJo.heeJ.notice.NoticeVo" />
+		<typeAlias alias="qna" type="com.cafeJo.heeJ.qna.QnaVo" />
+		<typeAlias alias="store" type="com.cafeJo.heeJ.store.StoreVo" />
+	</typeAliases>
+
+	<!--// SQL구문이 들어있는 SQL Mapper파일 포함 // -->
+	<mappers>
+		<mapper resource="com/cafeJo/heeJ/mapper/menu.xml"/>
+		<mapper resource="com/cafeJo/heeJ/mapper/member.xml"/>
+		<mapper resource="com/cafeJo/heeJ/mapper/event.xml"/>
+		<mapper resource="com/cafeJo/heeJ/mapper/notice.xml"/>
+		<mapper resource="com/cafeJo/heeJ/mapper/qna.xml"/>
+		<mapper resource="com/cafeJo/heeJ/mapper/store.xml"/>
+	</mappers>
+	
+</configuration>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- // 전역적인 자원들이 등록 (Dao, Service, ...) // -->
+
+	<!-- 1. DataSource 설정(url, username, password, ...) -->
+	<beans:bean id="dataSource" class="oracle.jdbc.pool.OracleDataSource">
+		<beans:property name="dataSourceName" value="ds" />
+		<beans:property name="URL" value="jdbc:oracle:thin:@localhost:1521:orcl" />
+		<beans:property name="user" value="cafeJo" />
+		<beans:property name="password" value="1234" />
+	</beans:bean>
+
+	<!-- 2. SqlSessionFactory 설정(dataSource, Mapper 파일 설정) -->
+	<beans:bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<beans:property name="dataSource" ref="dataSource" />
+		<beans:property name="configLocation" value="classpath:com/cafeJo/heeJ/mapper/mybatis-mapper.xml" />
+	</beans:bean>
+
+	<!-- 3. SqlSessionTemplate 설정(SqlSessionFactory 주입) -->
+	<beans:bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+		<beans:constructor-arg ref="sqlSessionFactory" index="0" />
+	</beans:bean>
+
+	<beans:bean id="memberDAO" class="com.cafeJo.heeJ.member.MemberDao">
+		<beans:property name="sqlSessionTemplate" ref="sqlSessionTemplate" />
+	</beans:bean>
+	
+	<beans:bean id="memberService" class="com.cafeJo.heeJ.member.MemberService">
+		<beans:property name="dao" ref="memberDAO"></beans:property>
+	</beans:bean>
+
+	<beans:bean id="menuDAO" class="com.cafeJo.heeJ.menu.MenuDao">
+		<beans:property name="sqlSessionTemplate" ref="sqlSessionTemplate" />
+	</beans:bean>
+	
+	<beans:bean id="menuService" class="com.cafeJo.heeJ.menu.MenuService">
+		<beans:property name="dao" ref="menuDAO"></beans:property>
+	</beans:bean>
+	
+	<beans:bean id="eventDAO" class="com.cafeJo.heeJ.event.EventDao">
+		<beans:property name="sqlSessionTemplate" ref="sqlSessionTemplate" />
+	</beans:bean>
+	
+ 	<beans:bean id="eventService" class="com.cafeJo.heeJ.event.EventService">
+		<beans:property name="dao" ref="eventDAO"></beans:property>
+	</beans:bean>
+	
+	<beans:bean id="noticeDAO" class="com.cafeJo.heeJ.notice.NoticeDao">
+		<beans:property name="sqlSessionTemplate" ref="sqlSessionTemplate" />
+	</beans:bean>
+	
+ 	<beans:bean id="noticeService" class="com.cafeJo.heeJ.notice.NoticeService">
+		<beans:property name="dao" ref="noticeDAO"></beans:property>
+	</beans:bean>
+	
+	<beans:bean id="qnaDAO" class="com.cafeJo.heeJ.qna.QnaDao">
+		<beans:property name="sqlSessionTemplate" ref="sqlSessionTemplate" />
+	</beans:bean>
+	
+ 	<beans:bean id="qnaService" class="com.cafeJo.heeJ.qna.QnaService">
+		<beans:property name="dao" ref="qnaDAO"></beans:property>
+	</beans:bean>
+	
+	<beans:bean id="storeDAO" class="com.cafeJo.heeJ.store.StoreDao">
+		<beans:property name="sqlSessionTemplate" ref="sqlSessionTemplate" />
+	</beans:bean>
+	
+ 	<beans:bean id="storeService" class="com.cafeJo.heeJ.store.StoreService">
+		<beans:property name="dao" ref="storeDAO"></beans:property>
+	</beans:bean>
+	
+</beans:beans>
